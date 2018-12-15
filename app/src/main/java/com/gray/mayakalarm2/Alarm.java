@@ -1,5 +1,7 @@
 package com.gray.mayakalarm2;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -9,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
@@ -19,18 +22,13 @@ import java.util.Date;
 
 public class Alarm extends WakefulBroadcastReceiver {
 
+
     public static void log(Context context, String str) {
 
+        EditText editText = (EditText) ((Activity) context).findViewById(R.id.edit_text);
+
         try {
-            File logFile = new File( context.getFilesDir(),"mayakalarm.log");
-
-            FileOutputStream outputStream = new FileOutputStream(logFile);
-            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
-
-            writer.write(new Date() + ":" + str + "\n");
-
-            writer.close();
-
+            editText.getText().append(str);
         } catch (Exception e) {
             Toast.makeText(context, "MayakAlarm2 exception " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -69,7 +67,8 @@ public class Alarm extends WakefulBroadcastReceiver {
             return;
         }
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+        @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wl = pm.newWakeLock(11111,"zaza");
+            //111    32/*PowerManager.PARTIAL_WAKE_LOCK*/, "mayakalarmwl");
         wl.acquire();
 
 
@@ -85,7 +84,7 @@ public class Alarm extends WakefulBroadcastReceiver {
     }
 
     public void setAlarm(Context context) {
-        int min = 59;
+        int min = 4;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.SECOND, 1);
@@ -99,7 +98,8 @@ public class Alarm extends WakefulBroadcastReceiver {
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, delta, pendingIntent);
         //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
-        Toast.makeText(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000, Toast.LENGTH_LONG).show();
+        log(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000);
+        //Toast.makeText(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000, Toast.LENGTH_LONG).show();
 
         Intent intent2 = new Intent(context, MainActivity.class);
         PendingIntent pi2 = PendingIntent.getActivity(context, 0, intent2, 0);

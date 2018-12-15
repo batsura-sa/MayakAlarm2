@@ -6,11 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 public class MayakService extends Service
 {
-    Alarm alarm = new Alarm();
+    private Alarm alarm = new Alarm();
     public void onCreate()
     {
         super.onCreate();       
@@ -19,7 +20,7 @@ public class MayakService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) 
     {
-        Toast.makeText(this, "MayakAlarm2 Service Started", Toast.LENGTH_LONG).show();
+        Alarm.log(getBaseContext().getApplicationContext(), "MayakAlarm2 Service Started");
         alarm.setAlarm(this);
 /* don't work
         ComponentName receiver = new ComponentName(this, Alarm.class);
