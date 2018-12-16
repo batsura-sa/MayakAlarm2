@@ -21,18 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Alarm extends WakefulBroadcastReceiver {
-
-
-    public static void log(Context context, String str) {
-
-        EditText editText = (EditText) ((Activity) context).findViewById(R.id.edit_text);
-
-        try {
-            editText.getText().append(str);
-        } catch (Exception e) {
-            Toast.makeText(context, "MayakAlarm2 exception " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
+    ServiceCallbacks serviceCallbacks;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -41,7 +30,7 @@ public class Alarm extends WakefulBroadcastReceiver {
         int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
-        log(context, "onReceive! day=" + day + " hour=" + hour);
+        //serviceCallbacks.log("onReceive! day=" + day + " hour=" + hour);
 
         Toast.makeText(context, "MayakAlarm2 onReceive! day " + day + " hour " + hour, Toast.LENGTH_LONG).show();
 
@@ -80,10 +69,13 @@ public class Alarm extends WakefulBroadcastReceiver {
 
 
 
-        setAlarm(context);
+        setAlarm(context, serviceCallbacks);
     }
 
-    public void setAlarm(Context context) {
+    public void setAlarm(Context context, ServiceCallbacks serviceCallbacks) {
+
+        this.serviceCallbacks = serviceCallbacks;
+
         int min = 4;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, min);
@@ -98,7 +90,9 @@ public class Alarm extends WakefulBroadcastReceiver {
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, delta, pendingIntent);
         //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
-        log(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000);
+
+        //serviceCallbacks.log( "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000);
+        
         //Toast.makeText(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000, Toast.LENGTH_LONG).show();
 
         Intent intent2 = new Intent(context, MainActivity.class);
