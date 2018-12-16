@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements ServiceCallbacks {
     private MayakService mayakService;
     private boolean bound = false;
+    SimpleDateFormat df = new SimpleDateFormat("dd.mm.YYYY hh:mm:ss");
 
 
     @Override
@@ -29,10 +31,13 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
     protected void onStart() {
         super.onStart();
         // bind to Service
+        log("before intent");
         Intent intent = new Intent(this, MayakService.class);
+        log("before startservice");
         startService(intent);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
+        log("beforeBindService");
+        //bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        //log("onStart done");
 
     }
 
@@ -67,11 +72,12 @@ public class MainActivity extends AppCompatActivity implements ServiceCallbacks 
         }
     };
 
+
     @Override
     public void log(String msg) {
         EditText editText = findViewById(R.id.edit_text);
         try {
-            editText.getText().append(new Date() + msg);
+            editText.getText().append(df.format(new Date())+": "+msg+"\n");
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "MayakAlarm2 exception " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
