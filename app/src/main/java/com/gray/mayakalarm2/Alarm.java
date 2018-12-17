@@ -69,10 +69,10 @@ public class Alarm extends WakefulBroadcastReceiver {
 
 
 
-        setAlarm(context, serviceCallbacks);
+        setAlarm(context);
     }
 
-    public void setAlarm(Context context, ServiceCallbacks serviceCallbacks) {
+    public void setAlarm(Context context) {
 
         this.serviceCallbacks = serviceCallbacks;
 
