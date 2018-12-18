@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +22,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Alarm extends WakefulBroadcastReceiver {
-    ServiceCallbacks serviceCallbacks;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -74,8 +74,6 @@ public class Alarm extends WakefulBroadcastReceiver {
 
     public void setAlarm(Context context) {
 
-        this.serviceCallbacks = serviceCallbacks;
-
         int min = 4;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, min);
@@ -91,7 +89,7 @@ public class Alarm extends WakefulBroadcastReceiver {
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, delta, pendingIntent);
         //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
 
-        //serviceCallbacks.log( "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000);
+        //log( context,"MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000);
         
         //Toast.makeText(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000, Toast.LENGTH_LONG).show();
 
@@ -110,4 +108,13 @@ public class Alarm extends WakefulBroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
     }
+
+    private void log(Context context, String msg) {
+        Intent intent = new Intent("intentKey");
+// You can also include some extra data.
+        intent.putExtra("key", msg);
+
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
 }
