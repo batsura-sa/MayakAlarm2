@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,11 +22,16 @@ import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Alarm extends WakefulBroadcastReceiver {
+public class Alarm extends BroadcastReceiver {
+    final String LOG_TAG = "mayakLogs";
 
+    public Alarm() {
+        Log.i(LOG_TAG, "in Alarm.Alarm() start!");
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        Log.i(LOG_TAG, "MayakAlarm27 onReceive!");
 
         int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -56,7 +62,7 @@ public class Alarm extends WakefulBroadcastReceiver {
             return;
         }
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wl = pm.newWakeLock(11111,"zaza");
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"mayakAlarm:wakelock");
             //111    32/*PowerManager.PARTIAL_WAKE_LOCK*/, "mayakalarmwl");
         wl.acquire();
 
@@ -73,8 +79,9 @@ public class Alarm extends WakefulBroadcastReceiver {
     }
 
     public void setAlarm(Context context) {
+        Log.i(LOG_TAG, "in Alarm.setAlarm start!");
 
-        int min = 4;
+        int min = 59;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.SECOND, 1);
@@ -87,18 +94,14 @@ public class Alarm extends WakefulBroadcastReceiver {
         alarmManager.cancel(pendingIntent);
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, delta, pendingIntent);
-        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
 
-        //log( context,"MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000);
+        Log.i(LOG_TAG, "in Alarm.setAlarm setTimerOk!");
         
         //Toast.makeText(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000, Toast.LENGTH_LONG).show();
 
-        Intent intent2 = new Intent(context, MainActivity.class);
-        PendingIntent pi2 = PendingIntent.getActivity(context, 0, intent2, 0);
 
-        AlarmManager.AlarmClockInfo info =  new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), pi2);
-
-        alarmManager.setAlarmClock(info, pendingIntent);
+        Log.i(LOG_TAG, "in Alarm.setAlarm setTimerOk!");
 
     }
 

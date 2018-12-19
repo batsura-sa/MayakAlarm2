@@ -24,10 +24,9 @@
         <service
             android:name=".MayakService"
             android:enabled="true"
-            android:exported="true"
-            android:process=":remote" >
+            android:exported="true">
         </service>
-        <receiver android:process=":remote" android:name=".Alarm"></receiver>
+        <receiver android:name=".Alarm"></receiver>
         <receiver android:name=".AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
