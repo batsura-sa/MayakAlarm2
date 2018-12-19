@@ -31,14 +31,15 @@ public class Alarm extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.i(LOG_TAG, "MayakAlarm27 onReceive!");
+        Log.i(LOG_TAG, "in Alarm.onReceive start!");
 
         int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
         //serviceCallbacks.log("onReceive! day=" + day + " hour=" + hour);
 
-        Toast.makeText(context, "MayakAlarm2 onReceive! day " + day + " hour " + hour, Toast.LENGTH_LONG).show();
+
+        Log.i(LOG_TAG, "in Alarm.onReceive day=" + day + " hour=" + hour);
 
 /*
         if (day > 5) {
@@ -48,8 +49,8 @@ public class Alarm extends BroadcastReceiver {
 */
 
 
-        if (hour < 6 || hour > 24) {
-            Toast.makeText(context, "MayakAlarm2! hour " + hour, Toast.LENGTH_LONG).show();
+        if (hour < 6 || hour > 23) {
+            Log.i(LOG_TAG, "in Alarm.onReceive bad time! return");
             return;
         }
 
@@ -58,9 +59,12 @@ public class Alarm extends BroadcastReceiver {
                 Thread.sleep(100);
             }
         } catch (Exception e) {
-            Toast.makeText(context, "MayakAlarm2Exception! " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.i(LOG_TAG, "in Alarm.onReceive Exception! " + e.getMessage());
             return;
         }
+
+        Log.i(LOG_TAG, "in Alarm.onReceive preparing to play music!");
+
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"mayakAlarm:wakelock");
             //111    32/*PowerManager.PARTIAL_WAKE_LOCK*/, "mayakalarmwl");
@@ -73,9 +77,7 @@ public class Alarm extends BroadcastReceiver {
 
         wl.release();
 
-
-
-        setAlarm(context);
+        Log.i(LOG_TAG, "in Alarm.onReceive done!");
     }
 
     public void setAlarm(Context context) {
@@ -96,12 +98,11 @@ public class Alarm extends BroadcastReceiver {
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, delta, pendingIntent);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
 
-        Log.i(LOG_TAG, "in Alarm.setAlarm setTimerOk!");
-        
+
         //Toast.makeText(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000, Toast.LENGTH_LONG).show();
 
 
-        Log.i(LOG_TAG, "in Alarm.setAlarm setTimerOk!");
+        Log.i(LOG_TAG, "in Alarm.setAlarm done!");
 
     }
 
