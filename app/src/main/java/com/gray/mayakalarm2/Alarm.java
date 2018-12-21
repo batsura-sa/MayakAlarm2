@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -83,7 +84,7 @@ public class Alarm extends BroadcastReceiver {
     public void setAlarm(Context context) {
         Log.i(LOG_TAG, "in Alarm.setAlarm start!");
 
-        int min = 59;
+        int min = 14;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.SECOND, 1);
@@ -92,11 +93,35 @@ public class Alarm extends BroadcastReceiver {
         Intent intent = new Intent(context, Alarm.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(pendingIntent);
+//https://github.com/trikita/talalarmo/blob/master/src/main/java/trikita/talalarmo/alarm/AlarmController.java
+
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {        // KITKAT and later
+                am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), sender);
+            } else {
+                am.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), sender);
+            }
+            intent = new Intent("android.intent.action.ALARM_CHANGED");
+            intent.putExtra("alarmSet", true);
+            mContext.sendBroadcast(intent);
+            SimpleDateFormat fmt = new SimpleDateFormat("E HH:mm");
+            Settings.System.putString(mContext.getContentResolver(),
+                    Settings.System.NEXT_ALARM_FORMATTED,
+                    fmt.format(c.getTime()));
+        } else {
+            Intent showIntent = new Intent(mContext, MainActivity.class);
+            PendingIntent showOperation = PendingIntent.getActivity(mContext, 0, showIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager.AlarmClockInfo alarmClockInfo = new AlarmManager.AlarmClockInfo(c.getTimeInMillis(), showOperation);
+            am.setAlarmClock(alarmClockInfo, sender);
+        }
+
+
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, delta, pendingIntent);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
 
         //Toast.makeText(context, "MayakAlarm27 setTimerOk! delta="+delta+" min=" +delta/60000, Toast.LENGTH_LONG).show();
