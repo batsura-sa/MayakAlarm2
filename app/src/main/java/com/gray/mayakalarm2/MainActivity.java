@@ -16,10 +16,13 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     SimpleDateFormat df = new SimpleDateFormat("dd.mm.YYYY hh:mm:ss");
+    public static String INTENT_FILTER = "mayakAlarmIntentFilter";
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             log("onReceive start");
+            Toast.makeText(getApplicationContext(), "MayakAlarm2 onReceive start intent", Toast.LENGTH_LONG).show();
             // Get extra data included in the Intent
             String message = intent.getStringExtra("key");
             log(message);
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver, new IntentFilter("intentKey"));
+                mMessageReceiver, new IntentFilter(INTENT_FILTER));
     }
 
     @Override
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             editText.getText().append(df.format(new Date()) + ": " + msg + "\n");
         } catch (Exception e) {
-            Toast.makeText(getBaseContext(), "MayakAlarm2 exception " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "MayakAlarm2 exception " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
     }

@@ -14,8 +14,6 @@ public class MayakService extends Service {
 
     public void onCreate() {
         super.onCreate();
-        //log("MayakService.onCreate done");
-        //Toast.makeText(getBaseContext(), "MayakAlarm2 onCreate()", Toast.LENGTH_LONG).show();
         Log.i(LOG_TAG, "In MayakService.onCreate");
 
     }
@@ -23,8 +21,8 @@ public class MayakService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        //log("MayakAlarm2 Service Started");
         alarm.setAlarm(this);
+        log("MayakAlarm2 Service Started");
         Log.i(LOG_TAG, "In MayakService.onStartCommand");
         return START_STICKY;
     }
@@ -40,11 +38,9 @@ public class MayakService extends Service {
     }
 
     private void log(String msg) {
-        Intent intent = new Intent("intentKey");
-// You can also include some extra data.
+        Intent intent = new Intent(MainActivity.INTENT_FILTER);
         intent.putExtra("key", msg);
         sendBroadcast(intent);
-        LocalBroadcastManager.getInstance(this.getApplicationContext()).sendBroadcast(intent);
         Log.d(LOG_TAG, "In MayakService.log msg " + msg);
     }
 }

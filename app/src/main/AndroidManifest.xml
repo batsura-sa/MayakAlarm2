@@ -15,20 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <service
             android:name=".MayakService"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote"
             >
         </service>
-        <receiver android:name=".Alarm" android:process=":remote"></receiver>
+        <receiver android:name=".Alarm"></receiver>
         <receiver android:name=".AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
